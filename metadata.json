@@ -1,0 +1,5 @@
+{
+  "name": "Trisolaris Simulator",
+  "description": "A chaotic three-body physics simulation inspired by The Three-Body Problem, featuring Gemini-powered civilization analysis.",
+  "requestFramePermissions": []
+}
