@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { PictureInPicture } from 'lucide-react';
 import { Body } from '../types';
 import { updatePhysics } from '../services/physicsUtils';
 
@@ -133,6 +134,36 @@ const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
       viewRef.current.zoom = 1;
       viewRef.current.yaw = 0;
       viewRef.current.pitch = 0;
+  };
+
+  const togglePiP = async () => {
+    try {
+      if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+      } else if (canvasRef.current) {
+        const canvas = canvasRef.current;
+        // Create a stream from the canvas
+        // Type assertion needed in some environments, but capturing stream is standard
+        const stream = (canvas as any).captureStream(60);
+        
+        const video = document.createElement('video');
+        video.muted = true;
+        video.srcObject = stream;
+        video.play();
+        
+        video.onloadedmetadata = () => {
+          video.requestPictureInPicture();
+        };
+        
+        // Cleanup when pip closes to stop the hidden video
+        video.addEventListener('leavepictureinpicture', () => {
+          video.srcObject = null;
+          video.remove();
+        });
+      }
+    } catch (err) {
+      console.error("PiP failed:", err);
+    }
   };
 
   // --- Rendering ---
@@ -305,12 +336,24 @@ const SimulationCanvas: React.FC<SimulationCanvasProps> = ({
         className="block touch-none outline-none"
         tabIndex={0} // Make div focusable for key events if needed, though we use window listener
       />
-      <div className="absolute top-4 left-4 text-xs text-slate-500 font-mono pointer-events-none select-none space-y-1">
-        <div>W/S: Tilt View</div>
-        <div>A/D: Rotate View</div>
-        <div>Double Click: Reset</div>
-        <div>Scroll: Zoom</div>
-        <div>Drag: Pan</div>
+      
+      {/* Top Left Controls & Info */}
+      <div className="absolute top-4 left-4 flex flex-col items-start gap-3 pointer-events-none">
+        <div className="text-xs text-slate-500 font-mono pointer-events-auto select-none space-y-1 bg-slate-900/50 p-2 rounded backdrop-blur border border-slate-800/50">
+            <div>W/S: Tilt View</div>
+            <div>A/D: Rotate View</div>
+            <div>Double Click: Reset</div>
+            <div>Scroll: Zoom</div>
+            <div>Drag: Pan</div>
+        </div>
+        
+        <button 
+            onClick={togglePiP}
+            className="pointer-events-auto p-2 bg-slate-800/80 hover:bg-slate-700 text-indigo-400 hover:text-indigo-300 rounded-lg backdrop-blur transition-all border border-slate-700 hover:border-indigo-500/50 shadow-lg"
+            title="Picture-in-Picture"
+        >
+            <PictureInPicture size={20} />
+        </button>
       </div>
     </div>
   );

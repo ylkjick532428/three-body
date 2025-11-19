@@ -1,5 +1,5 @@
 import React from 'react';
-import { Play, Pause, RotateCcw, Activity, Settings } from 'lucide-react';
+import { Play, Pause, RotateCcw, Activity, Settings, Github } from 'lucide-react';
 import { SimulationPreset } from '../types';
 
 interface ControlPanelProps {
@@ -61,43 +61,59 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         </div>
       </div>
 
-      {/* Physics Params */}
-      <div className="space-y-4 mt-auto border-t border-slate-800 pt-6">
-        <div className="flex items-center gap-2 text-slate-400 mb-2">
-          <Settings size={16} />
-          <h2 className="text-xs font-semibold uppercase tracking-wider">Universe Constants</h2>
-        </div>
-        
-        <div>
-          <label className="flex justify-between text-xs text-slate-400 mb-1">
-            <span>Gravitational Constant (G)</span>
-            <span className="text-indigo-400">{gConstant.toFixed(2)}</span>
-          </label>
-          <input
-            type="range"
-            min="0.1"
-            max="5"
-            step="0.1"
-            value={gConstant}
-            onChange={(e) => setGConstant(parseFloat(e.target.value))}
-            className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-          />
+      {/* Physics Params & Footer Container */}
+      <div className="mt-auto space-y-6">
+        <div className="space-y-4 border-t border-slate-800 pt-6">
+          <div className="flex items-center gap-2 text-slate-400 mb-2">
+            <Settings size={16} />
+            <h2 className="text-xs font-semibold uppercase tracking-wider">Universe Constants</h2>
+          </div>
+          
+          <div>
+            <label className="flex justify-between text-xs text-slate-400 mb-1">
+              <span>Gravitational Constant (G)</span>
+              <span className="text-indigo-400">{gConstant.toFixed(2)}</span>
+            </label>
+            <input
+              type="range"
+              min="0.1"
+              max="5"
+              step="0.1"
+              value={gConstant}
+              onChange={(e) => setGConstant(parseFloat(e.target.value))}
+              className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="flex justify-between text-xs text-slate-400 mb-1">
+              <span>Time Dilation</span>
+              <span className="text-indigo-400">{timeScale.toFixed(1)}x</span>
+            </label>
+            <input
+              type="range"
+              min="0.1"
+              max="3"
+              step="0.1"
+              value={timeScale}
+              onChange={(e) => setTimeScale(parseFloat(e.target.value))}
+              className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+            />
+          </div>
         </div>
 
-        <div>
-          <label className="flex justify-between text-xs text-slate-400 mb-1">
-            <span>Time Dilation</span>
-            <span className="text-indigo-400">{timeScale.toFixed(1)}x</span>
-          </label>
-          <input
-            type="range"
-            min="0.1"
-            max="3"
-            step="0.1"
-            value={timeScale}
-            onChange={(e) => setTimeScale(parseFloat(e.target.value))}
-            className="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-          />
+        {/* Footer */}
+        <div className="pt-4 border-t border-slate-800 flex items-center justify-between text-slate-500">
+          <span className="text-xs font-mono">Build v1.0.0</span>
+          <a 
+            href="https://github.com/google/genai-js" 
+            target="_blank" 
+            rel="noreferrer" 
+            className="hover:text-slate-300 transition-colors"
+            aria-label="View on GitHub"
+          >
+            <Github size={18} />
+          </a>
         </div>
       </div>
     </div>
